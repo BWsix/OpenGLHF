@@ -2,15 +2,21 @@
 #include "shaderProgram.h"
 #include "camera.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #define TARGET_FRAME_RATE 120
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
+Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-ShaderProgram shaderProgram;
-Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
+struct Program { ShaderProgram object; };
+Program program;
+struct Texture {  };
+Texture texture;
+struct Vao {  };
+Vao vao;
+struct Vbo {  };
+Vbo vbo;
+struct Veo {  };
+Veo veo;
 
 void setup();
 void displayFunc();
@@ -49,52 +55,61 @@ int main(int argc, char **argv) {
 }
 
 void setup() {
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
-  shaderProgram.load("./vertex.glsl", "./fragment.glsl");
-  shaderProgram.use();
-  shaderProgram.uniformSetMat4("projection", camera.getProjectionMatrix());
+
+  program.object = ShaderProgram();
+  program.object.load("./shaders/object.vert.glsl", "./shaders/object.frag.glsl");
 }
 
 void displayFunc() {
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  shaderProgram.uniformSetMat4("view", camera.getViewMatrix());
+  program.object.use();
+  program.object.uniformSetMat4("model", glm::mat4(1.0f));
+  program.object.uniformSetMat4("view", camera.getViewMatrix());
+  program.object.uniformSetMat4("projection", camera.getProjectionMatrix());
 
   glutSwapBuffers();
 }
 
 void reshapeFunc(int width, int height) {
-  log_info("reshapeFunc(width: %d, height: %d)", width, height);
+  // log_info("reshapeFunc(width: %d, height: %d)", width, height);
   glViewport(0, 0, width, height);
   camera.reshapeFunc(width, height);
-  shaderProgram.uniformSetMat4("projection", camera.getProjectionMatrix());
 }
 
 void keyboardFunc(unsigned char key, int x, int y) {
-  log_info("keyboardFunc(key: %c, x: %d, y: %d)", key, x, y);
+  // log_info("keyboardFunc(key: %c, x: %d, y: %d)", key, x, y);
+  (void) x;
+  (void) y;
   camera.keyboardFunc(key);
 }
 
 void keyboardUpFunc(unsigned char key, int x, int y) {
-  log_info("keyboardUpFunc(key: %c, x: %d, y: %d)", key, x, y);
+  // log_info("keyboardUpFunc(key: %c, x: %d, y: %d)", key, x, y);
+  (void) x;
+  (void) y;
   camera.keyboardUpFunc(key);
 }
 
 void specialFunc(int key, int x, int y) {
-  log_info("specialFunc(key: %d, x: %d, y: %d)", key, x, y);
+  // log_info("specialFunc(key: %d, x: %d, y: %d)", key, x, y);
+  (void) x;
+  (void) y;
   camera.specialFunc(key);
 }
 
 void specialUpFunc(int key, int x, int y) {
-  log_info("specialUpFunc(key: %d, x: %d, y: %d)", key, x, y);
+  // log_info("specialUpFunc(key: %d, x: %d, y: %d)", key, x, y);
+  (void) x;
+  (void) y;
   camera.specialUpFunc(key);
 }
 
 void mouseFunc(int button, int state, int x, int y) {
   // log_info("mouseFunc(button: %d, state: %d, x: %d, y: %d)", button, state, x, y);
   camera.mouseFunc(button, state, x, y);
-  shaderProgram.uniformSetMat4("projection", camera.getProjectionMatrix());
 }
 
 void motionFunc(int x, int y) {

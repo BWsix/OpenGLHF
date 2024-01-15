@@ -2,19 +2,13 @@
 #define SHADER_PROGRAM_H_
 
 #include "utils.h"
+#include <string>
 
 class ShaderProgram {
-private:
-  GLuint id;
-
-  void checkShaderCompileStatus(GLuint shader);
-  void checkProgramLinkStatus(GLuint program);
-  char *slurpFile(const char *filename);
-
 public:
   const GLuint &getId() const { return id; }
 
-  void load(const char *vertexPath, const char *fragmentPath);
+  void load(const char* vertexPath, const char* fragmentPath);
   void use() const { glUseProgram(id); }
 
   void uniformSetBool(const char *name, bool value) const { glUniform1i(glGetUniformLocation(id, name), (int)value); }
@@ -26,5 +20,11 @@ public:
   void uniformSetMat2(const std::string &name, const glm::mat2 &mat) const { glUniformMatrix2fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat)); }
   void uniformSetMat3(const std::string &name, const glm::mat3 &mat) const { glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat)); }
   void uniformSetMat4(const std::string &name, const glm::mat4 &mat) const { glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat)); }
+
+private:
+  GLuint id;
+
+  void checkShaderCompileStatus(GLuint shader);
+  void checkProgramLinkStatus(GLuint program);
 };
 #endif // SHADER_PROGRAM_H_

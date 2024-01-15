@@ -1,11 +1,11 @@
 #include "shaderProgram.h"
 
-void ShaderProgram::load(const char *vertexPath, const char *fragmentPath) {
+void ShaderProgram::load(const char* vertexPath, const char* fragmentPath) {
   id = glCreateProgram();
 
   GLuint vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  const char *vertexShaderSource = slurpFile(vertexPath);
+  const char *vertexShaderSource = Utils::slurpFile(vertexPath);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vertexShader);
   checkShaderCompileStatus(vertexShader);
@@ -13,7 +13,7 @@ void ShaderProgram::load(const char *vertexPath, const char *fragmentPath) {
 
   GLuint fragmentShader;
   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  const char *fragmentShaderSource = slurpFile(fragmentPath);
+  const char *fragmentShaderSource = Utils::slurpFile(fragmentPath);
   glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
   glCompileShader(fragmentShader);
   checkShaderCompileStatus(fragmentShader);
@@ -49,24 +49,3 @@ void ShaderProgram::checkProgramLinkStatus(GLuint program) {
   }
 }
 
-char *ShaderProgram::slurpFile(const char *filename) {
-  FILE *fp = NULL;
-  char *src = NULL;
-  size_t sz = 0, bytes_read = 0;
-
-  fp = fopen(filename, "rb");
-  check(fp, "Failed to open %s", filename);
-  fseek(fp, 0, SEEK_END);
-  sz = ftell(fp);
-  fseek(fp, 0, SEEK_SET);
-  src = new char[sz + 1];
-  bytes_read = fread(src, sizeof(char), sz, fp);
-  check(bytes_read == sz, "Failed to read from %s", filename);
-  src[sz] = '\0';
-  fclose(fp);
-  return src;
-error:
-  if (fp) fclose(fp);
-  if (src) free(src);
-  exit(1);
-}

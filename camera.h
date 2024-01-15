@@ -32,6 +32,8 @@ private:
 public:
   Camera(int width, int height) { reshapeFunc(width, height); }
 
+  const glm::vec3 &getPos() const { return cameraPos; }
+
   void setNear(float value) { near = value; }
   void setFar(float value) { far = value; }
 
