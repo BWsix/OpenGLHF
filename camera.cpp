@@ -50,22 +50,20 @@ void Camera::timerFunc() {
   deltaTime = (float)glutGet(GLUT_ELAPSED_TIME) / 1000.0f - timeElapsed;
   timeElapsed = (float)glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
   glm::vec3 cameraRight = glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
+  glm::vec2 cameraFrontNormalizedXZ = glm::normalize(glm::vec2(cameraFront.x, cameraFront.z));
+  glm::vec2 cameraRightNormalizedXZ = glm::normalize(glm::vec2(cameraRight.x, cameraRight.z));
 
   if (keyPressed[(size_t)'w']) {
-    cameraPos.x += movementSpeed * deltaTime * cameraFront.x;
-    cameraPos.z += movementSpeed * deltaTime * cameraFront.z;
+    cameraPos += movementSpeed * deltaTime * glm::vec3(cameraFrontNormalizedXZ.x, 0.0f, cameraFrontNormalizedXZ.y);
   }
   if (keyPressed[(size_t)'s']) {
-    cameraPos.x -= movementSpeed * deltaTime * cameraFront.x;
-    cameraPos.z -= movementSpeed * deltaTime * cameraFront.z;
+    cameraPos -= movementSpeed * deltaTime * glm::vec3(cameraFrontNormalizedXZ.x, 0.0f, cameraFrontNormalizedXZ.y);
   }
   if (keyPressed[(size_t)'d']) {
-    cameraPos.x += movementSpeed * deltaTime * cameraRight.x;
-    cameraPos.z += movementSpeed * deltaTime * cameraRight.z;
+    cameraPos += movementSpeed * deltaTime * glm::vec3(cameraRightNormalizedXZ.x, 0.0f, cameraRightNormalizedXZ.y);
   }
   if (keyPressed[(size_t)'a']) {
-    cameraPos.x -= movementSpeed * deltaTime * cameraRight.x;
-    cameraPos.z -= movementSpeed * deltaTime * cameraRight.z;
+    cameraPos -= movementSpeed * deltaTime * glm::vec3(cameraRightNormalizedXZ.x, 0.0f, cameraRightNormalizedXZ.y);
   }
   if (keyPressed[(size_t)' ']) {
     cameraPos.y += movementSpeed * deltaTime;
