@@ -2,6 +2,7 @@
 #define CAMERA_H_
 
 #include "utils.h"
+#include <cctype>
 
 class Camera {
 private:
@@ -47,13 +48,13 @@ public:
   glm::mat4 getProjectionMatrix() const { return glm::perspective(glm::radians(fovy), aspect, near, far); }
 
   bool isMousePressed(int mouse) const { return mousePressed[mouse]; }
-  bool getKeyPressed(int key) const { return keyPressed[key]; }
+  bool getKeyPressed(int key) const { return keyPressed[tolower(key)]; }
   bool getSpecialKeyPressed(int key) const { return specialKeyPressed[key]; }
 
   void reshapeFunc(int width, int height) { aspect = (float)width / height; };
   void mouseFunc(int button, int state, int x, int y);
-  void keyboardFunc(unsigned char key) { keyPressed[key] = true; }
-  void keyboardUpFunc(unsigned char key) { keyPressed[key] = false; }
+  void keyboardFunc(unsigned char key) { keyPressed[tolower(key)] = true; }
+  void keyboardUpFunc(unsigned char key) { keyPressed[tolower(key)] = false; }
   void specialFunc(int key) { specialKeyPressed[key] = true; }
   void specialUpFunc(int key) { specialKeyPressed[key] = false; }
   void motionFunc(int x, int y);
