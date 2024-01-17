@@ -8,7 +8,6 @@ class Camera {
 private:
   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
   glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-  glm::vec3 getCameraDir() const { return cameraPos + cameraFront; }
   
   float fovy = 45.0f;
   float aspect;
@@ -34,6 +33,7 @@ public:
   Camera(int width, int height) { reshapeFunc(width, height); }
 
   const glm::vec3 &getPos() const { return cameraPos; }
+  const glm::vec3 &getDir() const { return cameraFront; }
 
   void setNear(float value) { near = value; }
   void setFar(float value) { far = value; }
@@ -44,7 +44,7 @@ public:
   float getDeltaTime() const { return deltaTime; }
   float getFovy() const { return fovy; }
 
-  glm::mat4 getViewMatrix() const { return glm::lookAt(cameraPos, getCameraDir(), glm::vec3(0.0, 1.0, 0.0)); }
+  glm::mat4 getViewMatrix() const { return glm::lookAt(cameraPos, cameraPos + cameraFront, glm::vec3(0.0, 1.0, 0.0)); }
   glm::mat4 getProjectionMatrix() const { return glm::perspective(glm::radians(fovy), aspect, near, far); }
 
   bool isMousePressed(int mouse) const { return mousePressed[mouse]; }
